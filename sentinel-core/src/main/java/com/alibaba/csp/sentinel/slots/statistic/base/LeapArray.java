@@ -40,16 +40,19 @@ import com.alibaba.csp.sentinel.util.TimeUtil;
  */
 public abstract class LeapArray<T> {
 
-    protected int windowLengthInMs;
-    protected int sampleCount;
-    protected int intervalInMs;
-
+    /** 滑动时间窗口的大小（单位：毫秒） */
+    protected int                                       windowLengthInMs;
+    /** 样本数量（一个窗口的统计结果为一个样本） */
+    protected int                                       sampleCount;
+    /** 统计时间区间（单位：毫秒） */
+    protected int                                       intervalInMs;
+    /** 保存统计数据的地方 */
     protected final AtomicReferenceArray<WindowWrap<T>> array;
 
     /**
      * The conditional (predicate) update lock is used only when current bucket is deprecated.
      */
-    private final ReentrantLock updateLock = new ReentrantLock();
+    private final ReentrantLock                         updateLock = new ReentrantLock();
 
     /**
      * The total bucket count is: {@code sampleCount = intervalInMs / windowLengthInMs}.
@@ -95,18 +98,31 @@ public abstract class LeapArray<T> {
      */
     protected abstract WindowWrap<T> resetWindowTo(WindowWrap<T> windowWrap, long startTime);
 
+    /**
+     * 计算时间索引
+     * 
+     * @param timeMillis 时间戳
+     * @return 时间索引
+     */
     private int calculateTimeIdx(/*@Valid*/ long timeMillis) {
         long timeId = timeMillis / windowLengthInMs;
         // Calculate current index so we can map the timestamp to the leap array.
-        return (int)(timeId % array.length());
+        return (int) (timeId % array.length());
     }
 
+    /**
+     * 计算时间窗口的开始时间
+     * 
+     * @param timeMillis 时间戳
+     * @return 时间窗口的开始时间
+     */
     protected long calculateWindowStart(/*@Valid*/ long timeMillis) {
         return timeMillis - timeMillis % windowLengthInMs;
     }
 
     /**
      * Get bucket item at provided timestamp.
+     * 根据时间戳获取桶
      *
      * @param timeMillis a valid timestamp in milliseconds
      * @return current bucket item at provided timestamp if the time is valid; null if time is invalid
