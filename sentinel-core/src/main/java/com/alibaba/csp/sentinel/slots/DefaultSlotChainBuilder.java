@@ -38,14 +38,14 @@ public class DefaultSlotChainBuilder implements SlotChainBuilder {
     @Override
     public ProcessorSlotChain build() {
         ProcessorSlotChain chain = new DefaultProcessorSlotChain();
-        chain.addLast(new NodeSelectorSlot());
-        chain.addLast(new ClusterBuilderSlot());
-        chain.addLast(new LogSlot());
-        chain.addLast(new StatisticSlot());
-        chain.addLast(new AuthoritySlot());
-        chain.addLast(new SystemSlot());
-        chain.addLast(new FlowSlot());
-        chain.addLast(new DegradeSlot());
+        chain.addLast(new NodeSelectorSlot());  // 收集资源的路径，并将这些资源的调用路径，以树状结构存储起来
+        chain.addLast(new ClusterBuilderSlot());    // 用于存储资源的统计信息以及调用者信息，例如该资源的 RT, QPS, thread count 等等
+        chain.addLast(new LogSlot());   // 用于记录blockException信息的日志信息，会写入的日志文件中；
+        chain.addLast(new StatisticSlot()); // 用于记录、统计不同纬度的 runtime 指标监控信息；
+        chain.addLast(new AuthoritySlot()); // 根据配置的黑白名单和调用来源信息，来做黑白名单控制；
+        chain.addLast(new SystemSlot());    // 通过系统的状态，例如 load1 等，来控制总的入口流量；
+        chain.addLast(new FlowSlot());  // 用于根据预设的限流规则以及前面 slot 统计的状态，来进行流量控制；
+        chain.addLast(new DegradeSlot());   // 通过统计信息以及预设的规则，来做熔断降级；
 
         return chain;
     }

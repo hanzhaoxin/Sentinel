@@ -49,10 +49,13 @@ class CtEntry extends Entry {
         if (context instanceof NullContext) {
             return;
         }
+        // 获取「上下文」中上一次的入口
         this.parent = context.getCurEntry();
         if (parent != null) {
+            // 然后将当前入口设置为上一次入口的子节点
             ((CtEntry)parent).child = this;
         }
+        // 设置「上下文」的当前入口为该类本身
         context.setCurEntry(this);
     }
 
@@ -67,7 +70,11 @@ class CtEntry extends Entry {
             if (context instanceof NullContext) {
                 return;
             }
+
             if (context.getCurEntry() != this) {
+                // 根据「上下文」的名称获取DefaultNode
+                // 多线程环境下，每个线程都会创建一个context，
+                // 只要资源名相同，则context的名称也相同，那么获取到的节点就相同
                 String curEntryNameInContext = context.getCurEntry() == null ? null : context.getCurEntry().getResourceWrapper().getName();
                 // Clean previous call stack.
                 CtEntry e = (CtEntry)context.getCurEntry();

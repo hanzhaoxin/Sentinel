@@ -19,7 +19,8 @@ import com.alibaba.csp.sentinel.context.Context;
 
 /**
  * A container of some process and ways of notification when the process is finished.
- *
+ * 处理器槽
+ * 
  * @author qinan.qn
  * @author jialiang.linjl
  * @author leyou(lihao)
@@ -29,6 +30,7 @@ public interface ProcessorSlot<T> {
 
     /**
      * Entrance of this slot.
+     * 槽入口
      *
      * @param context         current {@link Context}
      * @param resourceWrapper current resource
@@ -38,11 +40,11 @@ public interface ProcessorSlot<T> {
      * @param args            parameters of the original call
      * @throws Throwable blocked exception or unexpected error
      */
-    void entry(Context context, ResourceWrapper resourceWrapper, T param, int count, boolean prioritized,
-               Object... args) throws Throwable;
+    void entry(Context context, ResourceWrapper resourceWrapper, T param, int count, boolean prioritized, Object... args) throws Throwable;
 
     /**
      * Means finish of {@link #entry(Context, ResourceWrapper, Object, int, boolean, Object...)}.
+     * 槽入口执行完成
      *
      * @param context         current {@link Context}
      * @param resourceWrapper current resource
@@ -52,11 +54,11 @@ public interface ProcessorSlot<T> {
      * @param args            parameters of the original call
      * @throws Throwable blocked exception or unexpected error
      */
-    void fireEntry(Context context, ResourceWrapper resourceWrapper, Object obj, int count, boolean prioritized,
-                   Object... args) throws Throwable;
+    void fireEntry(Context context, ResourceWrapper resourceWrapper, Object obj, int count, boolean prioritized, Object... args) throws Throwable;
 
     /**
      * Exit of this slot.
+     * 退出槽
      *
      * @param context         current {@link Context}
      * @param resourceWrapper current resource
@@ -67,6 +69,7 @@ public interface ProcessorSlot<T> {
 
     /**
      * Means finish of {@link #exit(Context, ResourceWrapper, int, Object...)}.
+     * 退出槽完成
      *
      * @param context         current {@link Context}
      * @param resourceWrapper current resource

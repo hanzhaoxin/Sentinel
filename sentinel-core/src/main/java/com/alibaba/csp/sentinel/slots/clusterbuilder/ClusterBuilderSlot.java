@@ -42,6 +42,12 @@ import com.alibaba.csp.sentinel.slotchain.StringResourceWrapper;
  * default nodes.
  * </p>
  *
+ *
+ * NodeSelectorSlot的职责比较简单，主要做了两件事：
+ * 一、为每个资源创建一个clusterNode，然后把clusterNode塞到DefaultNode中去
+ * 二、将clusterNode保持到全局的map中去，用资源作为map的key
+ * PS：一个资源只有一个ClusterNode，但是可以有多个DefaultNode
+ *
  * @author jialiang.linjl
  */
 public class ClusterBuilderSlot extends AbstractLinkedProcessorSlot<DefaultNode> {

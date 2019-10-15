@@ -23,21 +23,22 @@ import com.alibaba.csp.sentinel.context.Context;
  */
 public class DefaultProcessorSlotChain extends ProcessorSlotChain {
 
+    // 哨兵节点
     AbstractLinkedProcessorSlot<?> first = new AbstractLinkedProcessorSlot<Object>() {
 
-        @Override
-        public void entry(Context context, ResourceWrapper resourceWrapper, Object t, int count, boolean prioritized, Object... args)
-            throws Throwable {
-            super.fireEntry(context, resourceWrapper, t, count, prioritized, args);
-        }
+                                             @Override
+                                             public void entry(Context context, ResourceWrapper resourceWrapper, Object t, int count, boolean prioritized,
+                                                               Object... args) throws Throwable {
+                                                 super.fireEntry(context, resourceWrapper, t, count, prioritized, args);
+                                             }
 
-        @Override
-        public void exit(Context context, ResourceWrapper resourceWrapper, int count, Object... args) {
-            super.fireExit(context, resourceWrapper, count, args);
-        }
+                                             @Override
+                                             public void exit(Context context, ResourceWrapper resourceWrapper, int count, Object... args) {
+                                                 super.fireExit(context, resourceWrapper, count, args);
+                                             }
 
-    };
-    AbstractLinkedProcessorSlot<?> end = first;
+                                         };
+    AbstractLinkedProcessorSlot<?> end   = first;
 
     @Override
     public void addFirst(AbstractLinkedProcessorSlot<?> protocolProcessor) {
@@ -70,8 +71,7 @@ public class DefaultProcessorSlotChain extends ProcessorSlotChain {
     }
 
     @Override
-    public void entry(Context context, ResourceWrapper resourceWrapper, Object t, int count, boolean prioritized, Object... args)
-        throws Throwable {
+    public void entry(Context context, ResourceWrapper resourceWrapper, Object t, int count, boolean prioritized, Object... args) throws Throwable {
         first.transformEntry(context, resourceWrapper, t, count, prioritized, args);
     }
 

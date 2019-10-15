@@ -42,6 +42,7 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
  * <li>Finally, the sum statistics of all entrances.</li>
  * </ul>
  * </p>
+ * StatisticSlot负责来统计资源的实时状态
  *
  * @author jialiang.linjl
  * @author Eric Zhao
@@ -53,11 +54,16 @@ public class StatisticSlot extends AbstractLinkedProcessorSlot<DefaultNode> {
                       boolean prioritized, Object... args) throws Throwable {
         try {
             // Do some checking.
+            // 首先会触发后续slot的entry方法
+            /*即SystemSlot、FlowSlot、DegradeSlot等的规则，
+            * 如果规则不通过，就会抛出BlockException，则会在node中统计被block的数量。
+            * 反之会在node中统计通过的请求数和线程数等信息。第二部分是在exit方法中，当退出该Entry入口时，会统计rt的时间，并减少线程数。
+             */
             fireEntry(context, resourceWrapper, node, count, prioritized, args);
 
             // Request passed, add thread count and pass count.
-            node.increaseThreadNum();
-            node.addPassRequest(count);
+            node.increaseThreadNum(); // 线程数
+            node.addPassRequest(count); // 成功请求数
 
             if (context.getCurEntry().getOriginNode() != null) {
                 // Add count for origin node.
